@@ -17,7 +17,8 @@ exports.updateFinancialRecord = () => {
         body('type').optional().isIn(['income', 'expense']),
         body('category').optional().isString(),
         body('date').optional().isISO8601().toDate(),
-        body('notes').optional().isString(),
+        body('notes').optional().isString().isLength({ max: 500 }).withMessage('Notes can be up to 500 characters long'),
+
     ];
 };
 

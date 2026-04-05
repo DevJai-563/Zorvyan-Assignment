@@ -1,16 +1,11 @@
 const mongoose = require('mongoose');
 
 const FinancialRecordSchema = new mongoose.Schema({
-	user: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
-		required: true,
-		index: true,
-	},
+	
 	amount: {
 		type: Number,
 		required: true,
-		min: 0,
+		min: 0.01,
 	},
 	type: {
 		type: String,
@@ -21,6 +16,7 @@ const FinancialRecordSchema = new mongoose.Schema({
 	category: {
 		type: String,
 		required: true,
+		trim: true,
 		index: true,
 	},
 	date: {
@@ -31,6 +27,7 @@ const FinancialRecordSchema = new mongoose.Schema({
 	notes: {
 		type: String,
 		trim: true,
+		maxlength: 500,
 	},
 	isDeleted: {
 		type: Boolean,
@@ -39,6 +36,6 @@ const FinancialRecordSchema = new mongoose.Schema({
 	},
 }, { timestamps: true });
 
-FinancialRecordSchema.index({ user: 1, date: -1 }); // Compound index for user/date queries
+FinancialRecordSchema.index({ type: 1, category: 1, date: -1 });
 
 module.exports = mongoose.model('FinancialRecord', FinancialRecordSchema);

@@ -1,18 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('./controller');
-const { auth } = require('../../middlewares/auth');
+const { auth , verifyRole} = require('../../middlewares/auth');
 const validate = require('../../utils/validators');
+const app = express();
+
+
 
 // Create
-router.post('/', auth, validate.createFinancialRecord(), controller.createRecord);
+router.post('/', validate.createFinancialRecord(), auth,verifyRole('admin'), controller.createRecord);
 // List with filter/pagination
-router.get('/', auth, validate.filterFinancialRecords(), controller.getRecords);
+router.get('/', validate.filterFinancialRecords(), auth, verifyRole('admin','analyst'), controller.getRecords);
 // Get single
-router.get('/:id', auth, controller.getRecord);
+router.get('/:id', verifyRole('admin','analyst'), controller.getRecord);
 // Update
-router.put('/:id', auth, validate.updateFinancialRecord(), controller.updateRecord);
+router.put('/:id', auth,  validate.updateFinancialRecord(), verifyRole('admin'), controller.updateRecord);
 // Soft delete
-router.delete('/:id', auth, controller.deleteRecord);
+router.delete('/:id', auth,verifyRole('admin'), controller.deleteRecord);
 
 module.exports = router;

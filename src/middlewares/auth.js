@@ -26,12 +26,16 @@ exports.auth = async (req, res, next) => {
 };
 
 // Role check middleware: pass role(s) as string or array
-exports.verifyRole = (roles) => {
+exports.verifyRole = (...roles) => {
 	return (req, res, next) => {
-		const allowedRoles = Array.isArray(roles) ? roles : [roles];
-		if (!req.user || !allowedRoles.includes(req.user.role)) {
-			return res.status(403).json({ success: false, message: 'Forbidden: insufficient role' });
+
+		if (!req.user || !roles.includes(req.user.role)) {
+			return res.status(403).json({
+				success: false,
+				message: 'Forbidden: insufficient role'
+			});
 		}
+
 		next();
 	};
 };
