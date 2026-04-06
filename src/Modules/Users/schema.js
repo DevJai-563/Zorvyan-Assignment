@@ -30,7 +30,7 @@ const UserSchema = new mongoose.Schema({
         enum: ['viewer', 'analyst', 'admin'],
         default: 'viewer',
     },
-    delete:{
+    isDeleted:{
         type: Boolean,
         default: false,
     }

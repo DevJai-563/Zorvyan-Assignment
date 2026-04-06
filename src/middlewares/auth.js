@@ -15,8 +15,11 @@ exports.auth = async (req, res, next) => {
             return next();
         }
 		const user = await User.findById(decoded.id);
-		if (!user) {
+		if (!user || user.isDeleted !== false ) {
 			return res.status(401).json({ success: false, message: 'User not found' });
+		}
+		if (user.status !== 'active') {
+			return res.status(403).json({ success: false, message: 'User is not active' });
 		}
 		req.user = user;
 		next();

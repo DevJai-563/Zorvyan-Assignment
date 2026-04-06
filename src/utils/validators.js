@@ -77,7 +77,7 @@ exports.updateProfile = () => {
         body('email').optional().isEmail().withMessage('Please provide a valid email'),
         body('status').optional().isIn(['active', 'inactive']).withMessage('Invalid status value'),
         body('role').optional().isIn(['viewer', 'analyst']).withMessage('Invalid role value'),
-        body('delete').optional().isBoolean().withMessage('Delete must be a boolean value')     
+        body('isDeleted').optional().isBoolean().withMessage('Delete must be a boolean value')     
     ];
 };
 
