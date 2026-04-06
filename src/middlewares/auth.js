@@ -42,13 +42,3 @@ exports.verifyRole = (...roles) => {
 		next();
 	};
 };
-
-// Status check middleware: pass status (e.g., 'active')
-exports.status = (status) => {
-	return (req, res, next) => {
-		if (!req.user || req.user.status !== status) {
-			return res.status(403).json({ success: false, message: 'Forbidden: invalid status' });
-		}
-		next();
-	};
-};
