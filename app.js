@@ -3,7 +3,6 @@ const rateLimit = require('express-rate-limit');
 const express = require('express');
 const connectDB = require('./src/config/db');
 const errorHandling = require('./src/middlewares/errorHandling');
-const adminController = require('./src/Modules/Admin/controller');
 
 // Initialize Express app
 const app = express();
@@ -16,9 +15,8 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-// Connect to MongoDB and ensure admin exists
+// Connect to MongoDB 
 connectDB();
-adminController.createInitialAdmin();
 
 // Routes
 app.use('/api/admin', require('./src/Modules/Admin/routes'));

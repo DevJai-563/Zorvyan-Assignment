@@ -30,19 +30,6 @@ exports.adminLogin = async (req, res, next) => {
 	}
 };
 
-// Create initial admin if not exists
-exports.createInitialAdmin = async () => {
-	const adminEmail = process.env.ADMIN_EMAIL;
-	const adminPassword = process.env.ADMIN_PASSWORD;
-	if (!adminEmail || !adminPassword) return;
-	const existing = await User.findOne({ email: adminEmail, role: 'admin' });
-	if (!existing) {
-		const hashed = await bcrypt.hash(adminPassword, 10);
-		await User.create({ name: 'Admin', email: adminEmail, password: hashed, role: 'admin', status: 'active' });
-		console.log('Initial admin created');
-	}
-};
-
 // Get all users (admin only) with pagination, filter, and sort
 exports.getAllUsers = async (req, res, next) => {
 	try {
@@ -98,7 +85,6 @@ exports.getAllUsers = async (req, res, next) => {
 	}
 };
 
-
 // Update any user details (role, status, name, email, etc.)
 exports.updateUser = async (req, res, next) => {
 	try {
@@ -108,7 +94,7 @@ exports.updateUser = async (req, res, next) => {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        const { name, email, role, status, delete: deleteFlag } = req.body;
+        const { name, email, role, status, isDeleted: isDeletedFlag } = req.body;
 
         if (name) user.name = name;
         if (email){
@@ -120,7 +106,7 @@ exports.updateUser = async (req, res, next) => {
         } 
         if (role) user.role = role;
         if (status) user.status = status;
-        if (deleteFlag !== undefined) user.delete = deleteFlag;
+        if (isDeletedFlag !== undefined) user.isDeleted = isDeletedFlag;
         
         await user.save();
         res.json({ success: true, message: 'User updated successfully' });

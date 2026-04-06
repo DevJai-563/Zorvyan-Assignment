@@ -4,32 +4,30 @@ const controller = require('./controller');
 const { auth } = require('../../middlewares/auth');
 const { verifyRole } = require('../../middlewares/auth');
 
+router.use(auth);
+
+router.get(
+    '/recent-activity',
+    verifyRole( 'analyst', 'admin') ,
+    controller.getRecentActivity
+);
+
+router.use(verifyRole('viewer', 'analyst', 'admin'));
+
 router.get(
     '/summary',
-    auth,
-    verifyRole('viewer', 'analyst', 'admin'),
     controller.getSummary
 );
 
 router.get(
     '/category-breakdown',
-    auth,
-    verifyRole('viewer', 'analyst', 'admin'),
     controller.getCategoryBreakdown
 );
 
 router.get(
     '/trends',
-    auth,
-    verifyRole('viewer', 'analyst', 'admin'),
     controller.getTrends
 );
 
-router.get(
-    '/recent-activity',
-    auth,
-    verifyRole('viewer', 'analyst', 'admin'),
-    controller.getRecentActivity
-);
 
 module.exports = router;
