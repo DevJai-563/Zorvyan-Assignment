@@ -1,4 +1,4 @@
-const FinancialRecord = require('../Financial Records/schema');
+const FinancialRecord = require('../FinancialRecords/schema');
 
 
 

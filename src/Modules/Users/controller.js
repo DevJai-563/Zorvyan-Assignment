@@ -15,7 +15,8 @@ exports.register = async (req, res, next) => {
             name: username, 
             email, 
             password: hashedPassword,
-            role: role });
+            role: role || 'viewer',
+        });
         await newUser.save();
         res.status(201).json({ success: true, message: 'User registered successfully' });
     } catch (err) {
@@ -30,11 +31,19 @@ exports.login = async (req, res, next) => {
         if (!user || user.isDeleted !== false) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
+        if (user.status !== 'active') {
+            return res.status(403).json({ success: false, message: 'User account is inactive' });
+        }
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ success: false, message: 'Invalid credentials' });
         }
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '48h' });
+        // Fix 4: include role in JWT so auth middleware works correctly
+        const token = jwt.sign(
+            { id: user._id, role: user.role, status: user.status, isDeleted: user.isDeleted },
+            process.env.JWT_SECRET,
+            { expiresIn: '48h' }
+        );
         res.json({ success: true, token });
     } catch (err) {
         next(err);
@@ -52,4 +61,3 @@ exports.getProfile = async (req, res, next) => {
         next(err);
     }
 };
-

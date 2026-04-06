@@ -21,8 +21,8 @@ connectDB();
 // Routes
 app.use('/api/admin', require('./src/Modules/Admin/routes'));
 app.use('/api/users', require('./src/Modules/Users/routes'));
-app.use('/api/records', require('./src/Modules/Financial Records/routes'));
-app.use('/api/dashboard', require('./src/Modules/Dashboard Summary/routes'));
+app.use('/api/records', require('./src/Modules/FinancialRecords/routes'));
+app.use('/api/dashboard', require('./src/Modules/DashboardSummary/routes'));
 
 // Health check
 app.get('/', (req, res) => {
